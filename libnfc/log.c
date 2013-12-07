@@ -54,6 +54,8 @@ log_priority_to_str(const int priority)
 
 #include "log-internal.h"
 
+static uint32_t libnfc_log_level;
+
 void
 log_init(const nfc_context *context)
 {
@@ -61,6 +63,7 @@ log_init(const nfc_context *context)
   char str[32];
   sprintf(str, "%"PRIu32, context->log_level);
   setenv("LIBNFC_LOG_LEVEL", str, 1);
+  libnfc_log_level = context->log_level;
 #else
   (void)context;
 #endif
@@ -86,6 +89,7 @@ log_put(const uint8_t group, const char *category, const uint8_t priority, const
 #else
     log_level = 1;
 #endif
+    log_level = libnfc_log_level;
   } else {
     log_level = atoi(env_log_level);
   }

@@ -118,6 +118,9 @@
 #  include "drivers/pn532_i2c.h"
 #endif /* DRIVER_PN532_I2C_ENABLED */
 
+#if defined (DRIVER_PN532_NET_ENABLED)
+#  include "drivers/pn532_net.h"
+#endif /* DRIVER_PN532_NET_ENABLED */
 
 #define LOG_CATEGORY "libnfc.general"
 #define LOG_GROUP    NFC_LOG_GROUP_GENERAL
@@ -156,6 +159,9 @@ nfc_drivers_init(void)
 #if defined (DRIVER_ARYGON_ENABLED)
   nfc_register_driver(&arygon_driver);
 #endif /* DRIVER_ARYGON_ENABLED */
+#if defined (DRIVER_PN532_UART_ENABLED)
+  nfc_register_driver(&pn532_net_driver);
+#endif /* DRIVER_PN532_UART_ENABLED */
 }
 
 

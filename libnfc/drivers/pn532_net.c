@@ -60,6 +60,8 @@ struct pn532_net_data {
   net_port port;
 #ifdef WIN32
   volatile bool abort_flag;
+#else
+  int iAbortFds[2];
 #endif
 };
 
@@ -83,11 +85,11 @@ pn532_net_close(nfc_device *pnd)
   // Release UART port
   net_close(DRIVER_DATA(pnd)->port);
 
-//#ifndef WIN32
-  // Release file descriptors used for abort mecanism
-  //close(DRIVER_DATA(pnd)->iAbortFds[0]);
-  //close(DRIVER_DATA(pnd)->iAbortFds[1]);
-//#endif
+#ifndef WIN32
+  //Release file descriptors used for abort mecanism
+  close(DRIVER_DATA(pnd)->iAbortFds[0]);
+  close(DRIVER_DATA(pnd)->iAbortFds[1]);
+#endif
 
   pn53x_data_free(pnd);
   nfc_device_free(pnd);
@@ -164,6 +166,14 @@ pn532_net_open(const nfc_context *context, const nfc_connstring connstring)
 
 #ifdef WIN32
   DRIVER_DATA(pnd)->abort_flag = false;
+#else
+  // pipe-based abort mecanism
+  if (pipe(DRIVER_DATA(pnd)->iAbortFds) < 0) {
+    net_close(DRIVER_DATA(pnd)->port);
+    pn53x_data_free(pnd);
+    nfc_device_free(pnd);
+    return NULL;
+  }
 #endif
 
   // Check communication using "Diagnose" command, with "Communication test" (0x00)

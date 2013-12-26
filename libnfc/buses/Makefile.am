@@ -22,6 +22,13 @@ if UART_ENABLED
 endif
 EXTRA_DIST += uart.c uart.h
 
+if NET_ENABLED
+  libnfcbuses_la_SOURCES += net.c net.h
+  libnfcbuses_la_CFLAGS +=
+  libnfcbuses_la_LIBADD +=
+endif
+EXTRA_DIST += net.c net.h
+
 if LIBUSB_ENABLED
   libnfcbuses_la_SOURCES += usbbus.c usbbus.h
   libnfcbuses_la_CFLAGS += @libusb_CFLAGS@

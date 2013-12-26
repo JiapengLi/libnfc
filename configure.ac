@@ -120,6 +120,9 @@ LIBNFC_ARG_WITH_DRIVERS
 # Enable UART if
 AM_CONDITIONAL(UART_ENABLED, [test x"$uart_required" = x"yes"])
 
+# Enable NET if
+AM_CONDITIONAL(NET_ENABLED, [test x"$net_required" = x"yes"])
+
 # Enable SPI if
 AM_CONDITIONAL(SPI_ENABLED, [test x"$spi_required" = x"yes"])
 

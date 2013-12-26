@@ -31,6 +31,10 @@ if DRIVER_PN532_UART_ENABLED
 libnfcdrivers_la_SOURCES += pn532_uart.c pn532_uart.h
 endif
 
+if DRIVER_PN532_NET_ENABLED
+libnfcdrivers_la_SOURCES += pn532_net.c pn532_net.h
+endif
+
 if DRIVER_PN532_SPI_ENABLED
 libnfcdrivers_la_SOURCES += pn532_spi.c pn532_spi.h
 endif

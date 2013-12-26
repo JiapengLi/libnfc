@@ -86,7 +86,7 @@ net_open(const char *serverIP, const char *serverPortNum)
     return INVALID_NET_PORT;
   }
 
-  np->sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+  np->sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
   if ( np->sock == INVALID_SOCKET ){
   	log_put(LOG_GROUP, LOG_CATEGORY, NFC_LOG_PRIORITY_ERROR, "Create Socket Failed::%lu", GetLastError());
     return INVALID_NET_PORT;
@@ -267,7 +267,8 @@ net_receive(net_port np, uint8_t *pbtRx, const size_t szRx, void *abort_p, int t
     log_put(LOG_GROUP, LOG_CATEGORY, NFC_LOG_PRIORITY_ERROR, "select failed.");
     return NFC_EIO;
   }else if(res == 0){
-    return NFC_EIO;
+    //log_put(LOG_GROUP, LOG_CATEGORY, NFC_LOG_PRIORITY_ERROR, "Receive timeouts");
+    return NFC_ETIMEOUT;
   }
 
   unsigned long bytes_available = 0;
@@ -277,7 +278,7 @@ net_receive(net_port np, uint8_t *pbtRx, const size_t szRx, void *abort_p, int t
   }
 
   if(bytes_available == 0){
-    return NFC_EIO;
+    return NFC_ETIMEOUT;
   }
 
   if (setsockopt (npw->sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeouts, sizeof(timeouts)) < 0){
